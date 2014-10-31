@@ -43,6 +43,7 @@ func main() {
 
 	openshiftCmd.AddCommand(server.NewCommandStartServer("start"))
 	openshiftCmd.AddCommand(client.NewCommandKubecfg("kube"))
+	openshiftCmd.AddCommand(client.NewCommandKubectl("kubectl"))
 	flagtypes.GLog(openshiftCmd.PersistentFlags())
 
 	// version information
