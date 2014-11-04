@@ -21,7 +21,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/api2/meta"
 	"github.com/openshift/origin/pkg/runtime"
 )
@@ -37,7 +36,7 @@ func ResourceFromArgsOrFile(cmd *cobra.Command, args []string, filename string, 
 
 	if len(args) == 2 {
 		resource := args[0]
-		namespace = api.NamespaceDefault
+		namespace = getKubeNamespace(cmd)
 		name = args[1]
 		if len(name) == 0 || len(resource) == 0 {
 			usageError(cmd, "Must specify filename or command line params")
@@ -72,7 +71,7 @@ func ResourceFromArgs(cmd *cobra.Command, args []string, mapper meta.RESTMapper)
 	}
 
 	resource := args[0]
-	namespace = api.NamespaceDefault
+	namespace = getKubeNamespace(cmd)
 	name = args[1]
 	if len(name) == 0 || len(resource) == 0 {
 		usageError(cmd, "Must provide resource and name command line params")
@@ -99,7 +98,7 @@ func ResourceOrTypeFromArgs(cmd *cobra.Command, args []string, mapper meta.RESTM
 		usageError(cmd, "Must provide resource or a resource and name as command line params")
 	}
 
-	namespace = api.NamespaceDefault
+	namespace = getKubeNamespace(cmd)
 	if len(args) == 2 {
 		name = args[1]
 		if len(name) == 0 {
@@ -116,6 +115,9 @@ func ResourceOrTypeFromArgs(cmd *cobra.Command, args []string, mapper meta.RESTM
 	return
 }
 
+// ResourceFromFile retrieves the name and namespace from a valid file. If the file does not
+// resolve to a known type an error is returned. The returned mapping can be used to determine
+// the correct REST endpoint to modify this resource with.
 func ResourceFromFile(filename string, typer runtime.ObjectTyper, mapper meta.RESTMapper) (mapping *meta.RESTMapping, namespace, name string, data []byte) {
 	configData, err := readConfigData(filename)
 	checkErr(err)
@@ -142,4 +144,15 @@ func ResourceFromFile(filename string, typer runtime.ObjectTyper, mapper meta.RE
 	checkErr(err)
 
 	return
+}
+
+// CompareNamespaceFromFile returns an error if the namespace the user has provided on the CLI
+// or via the default namespace file does not match the namespace of an input file. This
+// prevents a user from unintentionally updating the wrong namespace.
+func CompareNamespaceFromFile(cmd *cobra.Command, namespace string) error {
+	defaultNamespace := getKubeNamespace(cmd)
+	if defaultNamespace != namespace {
+		return fmt.Errorf("The namespace from the provided file %q does not match the namespace %q. You must pass '--namespace=%s' to perform this operation.", namespace, defaultNamespace, namespace)
+	}
+	return nil
 }

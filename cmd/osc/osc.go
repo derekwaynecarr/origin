@@ -73,6 +73,8 @@ func NewCmdOpenShiftClient(name string) *cobra.Command {
 	cmd.PersistentFlags().String("client-certificate", "", "Path to a client certificate for TLS.")
 	cmd.PersistentFlags().String("client-key", "", "Path to a client key file for TLS.")
 	cmd.PersistentFlags().Bool("insecure-skip-tls-verify", false, "If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure.")
+	cmd.PersistentFlags().String("ns-path", os.Getenv("HOME")+"/.kubernetes_ns", "Path to the namespace info file that holds the namespace context to use for CLI requests.")
+	cmd.PersistentFlags().StringP("namespace", "n", "", "If present, the namespace scope for this CLI request.")
 
 	f := kubectl.NewFactory()
 	out := os.Stdout

@@ -46,6 +46,15 @@ Examples:
 			mapping, namespace, name, data := ResourceFromFile(filename, f.Typer, f.Mapper)
 			client, err := f.Client(cmd, mapping)
 			checkErr(err)
+
+			// use the default namespace if not specified, or check for conflict with the file's namespace
+			if len(namespace) == 0 {
+				namespace = getKubeNamespace(cmd)
+			} else {
+				err = CompareNamespaceFromFile(cmd, namespace)
+				checkErr(err)
+			}
+
 			err = kubectl.NewRESTHelper(client, mapping).Create(namespace, data)
 			checkErr(err)
 			fmt.Fprintf(out, "%s\n", name)
