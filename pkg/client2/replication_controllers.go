@@ -19,7 +19,7 @@ package client2
 import (
 	"fmt"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -31,10 +31,10 @@ type ReplicationControllersNamespacer interface {
 
 // ReplicationControllerInterface has methods to work with ReplicationController resources.
 type ReplicationControllerInterface interface {
-	List(selector labels.Selector) (*api2.ReplicationControllerList, error)
-	Get(name string) (*api2.ReplicationController, error)
-	Create(ctrl *api2.ReplicationController) (*api2.ReplicationController, error)
-	Update(ctrl *api2.ReplicationController) (*api2.ReplicationController, error)
+	List(selector labels.Selector) (*api.ReplicationControllerList, error)
+	Get(name string) (*api.ReplicationController, error)
+	Create(ctrl *api.ReplicationController) (*api.ReplicationController, error)
+	Update(ctrl *api.ReplicationController) (*api.ReplicationController, error)
 	Delete(name string) error
 	Watch(label, field labels.Selector, resourceVersion string) (watch.Interface, error)
 }
@@ -51,29 +51,29 @@ func newReplicationControllers(c *Client, namespace string) *replicationControll
 }
 
 // List takes a selector, and returns the list of replication controllers that match that selector.
-func (c *replicationControllers) List(selector labels.Selector) (result *api2.ReplicationControllerList, err error) {
-	result = &api2.ReplicationControllerList{}
+func (c *replicationControllers) List(selector labels.Selector) (result *api.ReplicationControllerList, err error) {
+	result = &api.ReplicationControllerList{}
 	err = c.r.Get().Namespace(c.ns).Path("replicationControllers").SelectorParam("labels", selector).Do().Into(result)
 	return
 }
 
 // Get returns information about a particular replication controller.
-func (c *replicationControllers) Get(name string) (result *api2.ReplicationController, err error) {
-	result = &api2.ReplicationController{}
+func (c *replicationControllers) Get(name string) (result *api.ReplicationController, err error) {
+	result = &api.ReplicationController{}
 	err = c.r.Get().Namespace(c.ns).Path("replicationControllers").Path(name).Do().Into(result)
 	return
 }
 
 // Create creates a new replication controller.
-func (c *replicationControllers) Create(controller *api2.ReplicationController) (result *api2.ReplicationController, err error) {
-	result = &api2.ReplicationController{}
+func (c *replicationControllers) Create(controller *api.ReplicationController) (result *api.ReplicationController, err error) {
+	result = &api.ReplicationController{}
 	err = c.r.Post().Namespace(c.ns).Path("replicationControllers").Body(controller).Do().Into(result)
 	return
 }
 
 // Update updates an existing replication controller.
-func (c *replicationControllers) Update(controller *api2.ReplicationController) (result *api2.ReplicationController, err error) {
-	result = &api2.ReplicationController{}
+func (c *replicationControllers) Update(controller *api.ReplicationController) (result *api.ReplicationController, err error) {
+	result = &api.ReplicationController{}
 	if len(controller.ResourceVersion) == 0 {
 		err = fmt.Errorf("invalid update object, missing resource version: %v", controller)
 		return

@@ -17,7 +17,7 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -29,24 +29,24 @@ type FakeReplicationControllers struct {
 	Namespace string
 }
 
-func (c *FakeReplicationControllers) List(selector labels.Selector) (*api2.ReplicationControllerList, error) {
+func (c *FakeReplicationControllers) List(selector labels.Selector) (*api.ReplicationControllerList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-controllers"})
-	return &api2.ReplicationControllerList{}, nil
+	return &api.ReplicationControllerList{}, nil
 }
 
-func (c *FakeReplicationControllers) Get(name string) (*api2.ReplicationController, error) {
+func (c *FakeReplicationControllers) Get(name string) (*api.ReplicationController, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-controller", Value: name})
-	return api2.Scheme.CopyOrDie(&c.Fake.Ctrl).(*api2.ReplicationController), nil
+	return api.Scheme.CopyOrDie(&c.Fake.Ctrl).(*api.ReplicationController), nil
 }
 
-func (c *FakeReplicationControllers) Create(controller *api2.ReplicationController) (*api2.ReplicationController, error) {
+func (c *FakeReplicationControllers) Create(controller *api.ReplicationController) (*api.ReplicationController, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "create-controller", Value: controller})
-	return &api2.ReplicationController{}, nil
+	return &api.ReplicationController{}, nil
 }
 
-func (c *FakeReplicationControllers) Update(controller *api2.ReplicationController) (*api2.ReplicationController, error) {
+func (c *FakeReplicationControllers) Update(controller *api.ReplicationController) (*api.ReplicationController, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "update-controller", Value: controller})
-	return &api2.ReplicationController{}, nil
+	return &api.ReplicationController{}, nil
 }
 
 func (c *FakeReplicationControllers) Delete(controller string) error {

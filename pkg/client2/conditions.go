@@ -17,14 +17,14 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/util/wait"
 )
 
 // ControllerHasDesiredReplicas returns a condition that will be true iff the desired replica count
 // for a controller's ReplicaSelector equals the Replicas count.
-func (c *Client) ControllerHasDesiredReplicas(controller api2.ReplicationController) wait.ConditionFunc {
+func (c *Client) ControllerHasDesiredReplicas(controller api.ReplicationController) wait.ConditionFunc {
 	return func() (bool, error) {
 		pods, err := c.Pods(controller.Namespace).List(labels.Set(controller.DesiredState.ReplicaSelector).AsSelector())
 		if err != nil {

@@ -25,7 +25,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/api2/latest"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/resources"

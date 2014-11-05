@@ -19,7 +19,7 @@ package client2
 import (
 	"fmt"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -31,10 +31,10 @@ type ServicesNamespacer interface {
 
 // ServiceInterface has methods to work with Service resources.
 type ServiceInterface interface {
-	List(selector labels.Selector) (*api2.ServiceList, error)
-	Get(name string) (*api2.Service, error)
-	Create(srv *api2.Service) (*api2.Service, error)
-	Update(srv *api2.Service) (*api2.Service, error)
+	List(selector labels.Selector) (*api.ServiceList, error)
+	Get(name string) (*api.Service, error)
+	Create(srv *api.Service) (*api.Service, error)
+	Update(srv *api.Service) (*api.Service, error)
 	Delete(name string) error
 	Watch(label, field labels.Selector, resourceVersion string) (watch.Interface, error)
 }
@@ -51,29 +51,29 @@ func newServices(c *Client, namespace string) *services {
 }
 
 // List takes a selector, and returns the list of services that match that selector
-func (c *services) List(selector labels.Selector) (result *api2.ServiceList, err error) {
-	result = &api2.ServiceList{}
+func (c *services) List(selector labels.Selector) (result *api.ServiceList, err error) {
+	result = &api.ServiceList{}
 	err = c.r.Get().Namespace(c.ns).Path("services").SelectorParam("labels", selector).Do().Into(result)
 	return
 }
 
 // Get returns information about a particular service.
-func (c *services) Get(name string) (result *api2.Service, err error) {
-	result = &api2.Service{}
+func (c *services) Get(name string) (result *api.Service, err error) {
+	result = &api.Service{}
 	err = c.r.Get().Namespace(c.ns).Path("services").Path(name).Do().Into(result)
 	return
 }
 
 // Create creates a new service.
-func (c *services) Create(svc *api2.Service) (result *api2.Service, err error) {
-	result = &api2.Service{}
+func (c *services) Create(svc *api.Service) (result *api.Service, err error) {
+	result = &api.Service{}
 	err = c.r.Post().Namespace(c.ns).Path("services").Body(svc).Do().Into(result)
 	return
 }
 
 // Update updates an existing service.
-func (c *services) Update(svc *api2.Service) (result *api2.Service, err error) {
-	result = &api2.Service{}
+func (c *services) Update(svc *api.Service) (result *api.Service, err error) {
+	result = &api.Service{}
 	if len(svc.ResourceVersion) == 0 {
 		err = fmt.Errorf("invalid update object, missing resource version: %v", svc)
 		return

@@ -17,7 +17,7 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/version2"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -31,12 +31,12 @@ type FakeAction struct {
 // implementation. This makes faking out just the method you want to test easier.
 type Fake struct {
 	Actions       []FakeAction
-	PodsList      api2.PodList
-	Ctrl          api2.ReplicationController
-	ServiceList   api2.ServiceList
-	EndpointsList api2.EndpointsList
-	MinionsList   api2.MinionList
-	EventsList    api2.EventList
+	PodsList      api.PodList
+	Ctrl          api.ReplicationController
+	ServiceList   api.ServiceList
+	EndpointsList api.EndpointsList
+	MinionsList   api.MinionList
+	EventsList    api.EventList
 	Err           error
 	Watch         watch.Interface
 }

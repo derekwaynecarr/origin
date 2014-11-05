@@ -22,7 +22,7 @@ import (
 	"text/tabwriter"
 
 	"github.com/golang/glog"
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	client "github.com/openshift/origin/pkg/client2"
 	"github.com/openshift/origin/pkg/labels"
 )
@@ -153,7 +153,7 @@ func getReplicationControllersForLabels(c client.ReplicationControllerInterface,
 	}
 
 	// Find the ones that match labelsToMatch.
-	var matchingRCs []api2.ReplicationController
+	var matchingRCs []api.ReplicationController
 	for _, controller := range rcs.Items {
 		selector := labels.SelectorFromSet(controller.DesiredState.ReplicaSelector)
 		if selector.Matches(labelsToMatch) {
@@ -174,17 +174,17 @@ func getReplicationControllersForLabels(c client.ReplicationControllerInterface,
 	return list
 }
 
-func getPodStatusForReplicationController(c client.PodInterface, controller *api2.ReplicationController) (running, waiting, terminated int, err error) {
+func getPodStatusForReplicationController(c client.PodInterface, controller *api.ReplicationController) (running, waiting, terminated int, err error) {
 	rcPods, err := c.List(labels.SelectorFromSet(controller.DesiredState.ReplicaSelector))
 	if err != nil {
 		return
 	}
 	for _, pod := range rcPods.Items {
-		if pod.CurrentState.Status == api2.PodRunning {
+		if pod.CurrentState.Status == api.PodRunning {
 			running++
-		} else if pod.CurrentState.Status == api2.PodWaiting {
+		} else if pod.CurrentState.Status == api.PodWaiting {
 			waiting++
-		} else if pod.CurrentState.Status == api2.PodTerminated {
+		} else if pod.CurrentState.Status == api.PodTerminated {
 			terminated++
 		}
 	}

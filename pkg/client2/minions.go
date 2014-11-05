@@ -17,7 +17,7 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 )
 
 type MinionsInterface interface {
@@ -25,9 +25,9 @@ type MinionsInterface interface {
 }
 
 type MinionInterface interface {
-	Get(id string) (result *api2.Minion, err error)
-	Create(minion *api2.Minion) (*api2.Minion, error)
-	List() (*api2.MinionList, error)
+	Get(id string) (result *api.Minion, err error)
+	Create(minion *api.Minion) (*api.Minion, error)
+	List() (*api.MinionList, error)
 	Delete(id string) error
 }
 
@@ -42,22 +42,22 @@ func newMinions(c *Client) *minions {
 }
 
 // Create creates a new minion.
-func (c *minions) Create(minion *api2.Minion) (*api2.Minion, error) {
-	result := &api2.Minion{}
+func (c *minions) Create(minion *api.Minion) (*api.Minion, error) {
+	result := &api.Minion{}
 	err := c.r.Post().Path("minions").Body(minion).Do().Into(result)
 	return result, err
 }
 
 // List lists all the minions in the cluster.
-func (c *minions) List() (result *api2.MinionList, err error) {
-	result = &api2.MinionList{}
+func (c *minions) List() (result *api.MinionList, err error) {
+	result = &api.MinionList{}
 	err = c.r.Get().Path("minions").Do().Into(result)
 	return
 }
 
 // Get gets an existing minion
-func (c *minions) Get(id string) (result *api2.Minion, err error) {
-	result = &api2.Minion{}
+func (c *minions) Get(id string) (result *api.Minion, err error) {
+	result = &api.Minion{}
 	err = c.r.Get().Path("minions").Path(id).Do().Into(result)
 	return
 }

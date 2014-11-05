@@ -17,7 +17,7 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -29,21 +29,21 @@ type FakeEvents struct {
 }
 
 // Create makes a new event. Returns the copy of the event the server returns, or an error.
-func (c *FakeEvents) Create(event *api2.Event) (*api2.Event, error) {
+func (c *FakeEvents) Create(event *api.Event) (*api.Event, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-event", Value: event.Name})
-	return &api2.Event{}, nil
+	return &api.Event{}, nil
 }
 
 // List returns a list of events matching the selectors.
-func (c *FakeEvents) List(label, field labels.Selector) (*api2.EventList, error) {
+func (c *FakeEvents) List(label, field labels.Selector) (*api.EventList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-events"})
 	return &c.Fake.EventsList, nil
 }
 
 // Get returns the given event, or an error.
-func (c *FakeEvents) Get(id string) (*api2.Event, error) {
+func (c *FakeEvents) Get(id string) (*api.Event, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-event", Value: id})
-	return &api2.Event{}, nil
+	return &api.Event{}, nil
 }
 
 // Watch starts watching for events matching the given selectors.

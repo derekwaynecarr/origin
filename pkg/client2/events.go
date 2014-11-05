@@ -17,7 +17,7 @@ limitations under the License.
 package client2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -29,9 +29,9 @@ type EventsInterface interface {
 
 // EventInterface has methods to work with Event resources
 type EventInterface interface {
-	Create(event *api2.Event) (*api2.Event, error)
-	List(label, field labels.Selector) (*api2.EventList, error)
-	Get(id string) (*api2.Event, error)
+	Create(event *api.Event) (*api.Event, error)
+	List(label, field labels.Selector) (*api.EventList, error)
+	Get(id string) (*api.Event, error)
 	Watch(label, field labels.Selector, resourceVersion string) (watch.Interface, error)
 }
 
@@ -48,15 +48,15 @@ func newEvents(c *Client) *events {
 }
 
 // Create makes a new event. Returns the copy of the event the server returns, or an error.
-func (c *events) Create(event *api2.Event) (*api2.Event, error) {
-	result := &api2.Event{}
+func (c *events) Create(event *api.Event) (*api.Event, error) {
+	result := &api.Event{}
 	err := c.r.Post().Path("events").Body(event).Do().Into(result)
 	return result, err
 }
 
 // List returns a list of events matching the selectors.
-func (c *events) List(label, field labels.Selector) (*api2.EventList, error) {
-	result := &api2.EventList{}
+func (c *events) List(label, field labels.Selector) (*api.EventList, error) {
+	result := &api.EventList{}
 	err := c.r.Get().
 		Path("events").
 		SelectorParam("labels", label).
@@ -67,8 +67,8 @@ func (c *events) List(label, field labels.Selector) (*api2.EventList, error) {
 }
 
 // Get returns the given event, or an error.
-func (c *events) Get(id string) (*api2.Event, error) {
-	result := &api2.Event{}
+func (c *events) Get(id string) (*api.Event, error) {
+	result := &api.Event{}
 	err := c.r.Get().Path("events").Path(id).Do().Into(result)
 	return result, err
 }

@@ -25,7 +25,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/health"
 )
 
@@ -47,8 +47,8 @@ type KubeletHealthChecker interface {
 // Injectable for easy testing.
 type PodInfoGetter interface {
 	// GetPodInfo returns information about all containers which are part
-	// Returns an api2.PodInfo, or an error if one occurs.
-	GetPodInfo(host, podNamespace, podID string) (api2.PodInfo, error)
+	// Returns an api.PodInfo, or an error if one occurs.
+	GetPodInfo(host, podNamespace, podID string) (api.PodInfo, error)
 }
 
 // HTTPKubeletClient is the default implementation of PodInfoGetter and KubeletHealthchecker, accesses the kubelet over HTTP.
@@ -89,7 +89,7 @@ func (c *HTTPKubeletClient) url(host string) string {
 }
 
 // GetPodInfo gets information about the specified pod.
-func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api2.PodInfo, error) {
+func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api.PodInfo, error) {
 	request, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
@@ -114,7 +114,7 @@ func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api2.P
 		return nil, err
 	}
 	// Check that this data can be unmarshalled
-	info := api2.PodInfo{}
+	info := api.PodInfo{}
 	err = json.Unmarshal(body, &info)
 	if err != nil {
 		return nil, err
@@ -128,11 +128,11 @@ func (c *HTTPKubeletClient) HealthCheck(host string) (health.Status, error) {
 
 // FakeKubeletClient is a fake implementation of PodInfoGetter. It is useful for testing.
 type FakePodInfoGetter struct {
-	data api2.PodInfo
+	data api.PodInfo
 	err  error
 }
 
 // GetPodInfo is a fake implementation of PodInfoGetter.GetPodInfo.
-func (c *FakePodInfoGetter) GetPodInfo(host, podNamespace string, podID string) (api2.PodInfo, error) {
+func (c *FakePodInfoGetter) GetPodInfo(host, podNamespace string, podID string) (api.PodInfo, error) {
 	return c.data, c.err
 }

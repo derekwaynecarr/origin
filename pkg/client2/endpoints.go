@@ -19,7 +19,7 @@ package client2
 import (
 	"fmt"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/labels"
 	"github.com/openshift/origin/pkg/watch"
 )
@@ -31,10 +31,10 @@ type EndpointsNamespacer interface {
 
 // EndpointsInterface has methods to work with Endpoints resources
 type EndpointsInterface interface {
-	Create(endpoints *api2.Endpoints) (*api2.Endpoints, error)
-	List(selector labels.Selector) (*api2.EndpointsList, error)
-	Get(id string) (*api2.Endpoints, error)
-	Update(endpoints *api2.Endpoints) (*api2.Endpoints, error)
+	Create(endpoints *api.Endpoints) (*api.Endpoints, error)
+	List(selector labels.Selector) (*api.EndpointsList, error)
+	Get(id string) (*api.Endpoints, error)
+	Update(endpoints *api.Endpoints) (*api.Endpoints, error)
 	Watch(label, field labels.Selector, resourceVersion string) (watch.Interface, error)
 }
 
@@ -50,22 +50,22 @@ func newEndpoints(c *Client, namespace string) *endpoints {
 }
 
 // Create creates a new endpoint.
-func (c *endpoints) Create(endpoints *api2.Endpoints) (*api2.Endpoints, error) {
-	result := &api2.Endpoints{}
+func (c *endpoints) Create(endpoints *api.Endpoints) (*api.Endpoints, error) {
+	result := &api.Endpoints{}
 	err := c.r.Post().Namespace(c.ns).Path("endpoints").Body(endpoints).Do().Into(result)
 	return result, err
 }
 
 // List takes a selector, and returns the list of endpoints that match that selector
-func (c *endpoints) List(selector labels.Selector) (result *api2.EndpointsList, err error) {
-	result = &api2.EndpointsList{}
+func (c *endpoints) List(selector labels.Selector) (result *api.EndpointsList, err error) {
+	result = &api.EndpointsList{}
 	err = c.r.Get().Namespace(c.ns).Path("endpoints").SelectorParam("labels", selector).Do().Into(result)
 	return
 }
 
 // Get returns information about the endpoints for a particular service.
-func (c *endpoints) Get(id string) (result *api2.Endpoints, err error) {
-	result = &api2.Endpoints{}
+func (c *endpoints) Get(id string) (result *api.Endpoints, err error) {
+	result = &api.Endpoints{}
 	err = c.r.Get().Namespace(c.ns).Path("endpoints").Path(id).Do().Into(result)
 	return
 }
@@ -82,8 +82,8 @@ func (c *endpoints) Watch(label, field labels.Selector, resourceVersion string) 
 		Watch()
 }
 
-func (c *endpoints) Update(endpoints *api2.Endpoints) (*api2.Endpoints, error) {
-	result := &api2.Endpoints{}
+func (c *endpoints) Update(endpoints *api.Endpoints) (*api.Endpoints, error) {
+	result := &api.Endpoints{}
 	if len(endpoints.ResourceVersion) == 0 {
 		return nil, fmt.Errorf("invalid update object, missing resource version: %v", endpoints)
 	}
