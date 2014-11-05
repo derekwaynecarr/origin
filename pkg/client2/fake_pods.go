@@ -28,14 +28,14 @@ type FakePods struct {
 	Namespace string
 }
 
-func (c *FakePods) List(selector labels.Selector) (*api.PodList, error) {
+func (c *FakePods) List(selector labels.Selector) (*api2.PodList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-pods"})
-	return api.Scheme.CopyOrDie(&c.Fake.PodsList).(*api.PodList), nil
+	return api2.Scheme.CopyOrDie(&c.Fake.PodsList).(*api2.PodList), nil
 }
 
-func (c *FakePods) Get(name string) (*api.Pod, error) {
+func (c *FakePods) Get(name string) (*api2.Pod, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-pod", Value: name})
-	return &api.Pod{ObjectMeta: api.ObjectMeta{Name: name, Namespace: c.Namespace}}, nil
+	return &api2.Pod{ObjectMeta: api2.ObjectMeta{Name: name, Namespace: c.Namespace}}, nil
 }
 
 func (c *FakePods) Delete(name string) error {
@@ -43,12 +43,12 @@ func (c *FakePods) Delete(name string) error {
 	return nil
 }
 
-func (c *FakePods) Create(pod *api.Pod) (*api.Pod, error) {
+func (c *FakePods) Create(pod *api2.Pod) (*api2.Pod, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "create-pod"})
-	return &api.Pod{}, nil
+	return &api2.Pod{}, nil
 }
 
-func (c *FakePods) Update(pod *api.Pod) (*api.Pod, error) {
+func (c *FakePods) Update(pod *api2.Pod) (*api2.Pod, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "update-pod", Value: pod.Name})
-	return &api.Pod{}, nil
+	return &api2.Pod{}, nil
 }

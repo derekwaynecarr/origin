@@ -31,12 +31,12 @@ type FakeAction struct {
 // implementation. This makes faking out just the method you want to test easier.
 type Fake struct {
 	Actions       []FakeAction
-	PodsList      api.PodList
-	Ctrl          api.ReplicationController
-	ServiceList   api.ServiceList
-	EndpointsList api.EndpointsList
-	MinionsList   api.MinionList
-	EventsList    api.EventList
+	PodsList      api2.PodList
+	Ctrl          api2.ReplicationController
+	ServiceList   api2.ServiceList
+	EndpointsList api2.EndpointsList
+	MinionsList   api2.MinionList
+	EventsList    api2.EventList
 	Err           error
 	Watch         watch.Interface
 }

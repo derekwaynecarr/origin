@@ -349,7 +349,7 @@ func (r *Request) shouldPoll(err error) (*Request, bool) {
 		return nil, false
 	}
 	status := apistatus.Status()
-	if status.Status != api.StatusWorking {
+	if status.Status != api2.StatusWorking {
 		return nil, false
 	}
 	if status.Details == nil || len(status.Details.ID) == 0 {
@@ -369,7 +369,7 @@ func (r *Request) transformResponse(resp *http.Response, req *http.Request) ([]b
 
 	// Did the server give us a status response?
 	isStatusResponse := false
-	var status api.Status
+	var status api2.Status
 	if err := r.codec.DecodeInto(body, &status); err == nil && status.Status != "" {
 		isStatusResponse = true
 	}
@@ -383,7 +383,7 @@ func (r *Request) transformResponse(resp *http.Response, req *http.Request) ([]b
 	}
 
 	// If the server gave us a status back, look at what it was.
-	if isStatusResponse && status.Status != api.StatusSuccess {
+	if isStatusResponse && status.Status != api2.StatusSuccess {
 		// "Working" requests need to be handled specially.
 		// "Failed" requests are clearly just an error and it makes sense to return them as such.
 		return nil, false, errors.FromObject(&status)

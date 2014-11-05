@@ -65,10 +65,10 @@ type VersionInterface interface {
 	ServerAPIVersions() (*version.APIVersions, error)
 }
 
-// APIStatus is exposed by errors that can be converted to an api.Status object
+// APIStatus is exposed by errors that can be converted to an api2..Status object
 // for finer grained details.
 type APIStatus interface {
-	Status() api.Status
+	Status() api2.Status
 }
 
 // Client is the implementation of a Kubernetes client.
@@ -92,7 +92,7 @@ func (c *Client) ServerVersion() (*version.Info, error) {
 
 // ServerAPIVersions retrieves and parses the list of API versions the server supports.
 func (c *Client) ServerAPIVersions() (*version.APIVersions, error) {
-	body, err := c.Get().AbsPath("/api").Do().Raw()
+	body, err := c.Get().AbsPath("/api2.").Do().Raw()
 	if err != nil {
 		return nil, err
 	}

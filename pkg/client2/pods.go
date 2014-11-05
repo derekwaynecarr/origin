@@ -30,11 +30,11 @@ type PodsNamespacer interface {
 
 // PodInterface has methods to work with Pod resources.
 type PodInterface interface {
-	List(selector labels.Selector) (*api.PodList, error)
-	Get(name string) (*api.Pod, error)
+	List(selector labels.Selector) (*api2.PodList, error)
+	Get(name string) (*api2.Pod, error)
 	Delete(name string) error
-	Create(pod *api.Pod) (*api.Pod, error)
-	Update(pod *api.Pod) (*api.Pod, error)
+	Create(pod *api2.Pod) (*api2.Pod, error)
+	Update(pod *api2.Pod) (*api2.Pod, error)
 }
 
 // pods implements PodsNamespacer interface
@@ -52,15 +52,15 @@ func newPods(c *Client, namespace string) *pods {
 }
 
 // ListPods takes a selector, and returns the list of pods that match that selector.
-func (c *pods) List(selector labels.Selector) (result *api.PodList, err error) {
-	result = &api.PodList{}
+func (c *pods) List(selector labels.Selector) (result *api2.PodList, err error) {
+	result = &api2.PodList{}
 	err = c.r.Get().Namespace(c.ns).Path("pods").SelectorParam("labels", selector).Do().Into(result)
 	return
 }
 
 // GetPod takes the name of the pod, and returns the corresponding Pod object, and an error if it occurs
-func (c *pods) Get(name string) (result *api.Pod, err error) {
-	result = &api.Pod{}
+func (c *pods) Get(name string) (result *api2.Pod, err error) {
+	result = &api2.Pod{}
 	err = c.r.Get().Namespace(c.ns).Path("pods").Path(name).Do().Into(result)
 	return
 }
@@ -71,15 +71,15 @@ func (c *pods) Delete(name string) error {
 }
 
 // CreatePod takes the representation of a pod.  Returns the server's representation of the pod, and an error, if it occurs.
-func (c *pods) Create(pod *api.Pod) (result *api.Pod, err error) {
-	result = &api.Pod{}
+func (c *pods) Create(pod *api2.Pod) (result *api2.Pod, err error) {
+	result = &api2.Pod{}
 	err = c.r.Post().Namespace(c.ns).Path("pods").Body(pod).Do().Into(result)
 	return
 }
 
 // UpdatePod takes the representation of a pod to update.  Returns the server's representation of the pod, and an error, if it occurs.
-func (c *pods) Update(pod *api.Pod) (result *api.Pod, err error) {
-	result = &api.Pod{}
+func (c *pods) Update(pod *api2.Pod) (result *api2.Pod, err error) {
+	result = &api2.Pod{}
 	if len(pod.ResourceVersion) == 0 {
 		err = fmt.Errorf("invalid update object, missing resource version: %v", pod)
 		return

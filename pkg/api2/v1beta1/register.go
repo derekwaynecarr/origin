@@ -19,13 +19,23 @@ package v1beta1
 import (
 	"github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/runtime"
+
+	_ "github.com/openshift/origin/pkg/build/api"
+	_ "github.com/openshift/origin/pkg/config/api"
+	_ "github.com/openshift/origin/pkg/deploy/api"
+	_ "github.com/openshift/origin/pkg/image/api"
+	_ "github.com/openshift/origin/pkg/oauth/api"
+	_ "github.com/openshift/origin/pkg/project/api"
+	_ "github.com/openshift/origin/pkg/route/api"
+	_ "github.com/openshift/origin/pkg/template/api"
+	_ "github.com/openshift/origin/pkg/user/api"
 )
 
 // Codec encodes internal objects to the v1beta1 scheme
-var Codec = runtime.CodecFor(api.Scheme, "v1beta1")
+var Codec = runtime.CodecFor(api2.Scheme, "v1beta1")
 
 func init() {
-	api.Scheme.AddKnownTypes("v1beta1",
+	api2.Scheme.AddKnownTypes("v1beta1",
 		&Pod{},
 		&PodList{},
 		&ReplicationController{},

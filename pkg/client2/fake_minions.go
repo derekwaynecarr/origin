@@ -26,19 +26,19 @@ type FakeMinions struct {
 	Fake *Fake
 }
 
-func (c *FakeMinions) Get(name string) (*api.Minion, error) {
+func (c *FakeMinions) Get(name string) (*api2.Minion, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-minion", Value: name})
-	return &api.Minion{}, nil
+	return &api2.Minion{}, nil
 }
 
-func (c *FakeMinions) List() (*api.MinionList, error) {
+func (c *FakeMinions) List() (*api2.MinionList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-minions", Value: nil})
 	return &c.Fake.MinionsList, nil
 }
 
-func (c *FakeMinions) Create(minion *api.Minion) (*api.Minion, error) {
+func (c *FakeMinions) Create(minion *api2.Minion) (*api2.Minion, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "create-minion", Value: minion})
-	return &api.Minion{}, nil
+	return &api2.Minion{}, nil
 }
 
 func (c *FakeMinions) Delete(id string) error {

@@ -18,15 +18,14 @@ package latest
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/api2/meta"
+	"strings"
 )
 
 // DefaultRESTMapper exposes mappings between the types defined in
-// api.Scheme and a single server. It assumes that all types defined
-// in api.Scheme map to a single RESTClient, which is invalid if
+// api2.Scheme and a single server. It assumes that all types defined
+// in api2.Scheme map to a single RESTClient, which is invalid if
 // the scheme can work with clients across multiple component plugin
 // types.
 //
@@ -39,20 +38,21 @@ import (
 // TODO: Only accept plural for some operations for increased control?
 // (`get pod bar` vs `get pods bar`)
 type DefaultRESTMapper struct {
-	mapping map[string]api.TypeMeta
-	reverse map[api.TypeMeta]string
+	mapping map[string]api2.TypeMeta
+	reverse map[api2.TypeMeta]string
 }
 
 // NewDefaultRESTMapper initializes a mapping between Kind and APIVersion
-// to a resource name and back based on the Kubernetes api.Scheme and the
+// to a resource name and back based on the Kubernetes api2.Scheme and the
 // Kubernetes API conventions.
 func NewDefaultRESTMapper() meta.RESTMapper {
-	mapping := make(map[string]api.TypeMeta)
-	reverse := make(map[api.TypeMeta]string)
+	mapping := make(map[string]api2.TypeMeta)
+	reverse := make(map[api2.TypeMeta]string)
 	for _, version := range Versions {
-		for kind := range api.Scheme.KnownTypes(version) {
+		for kind := range api2.Scheme.KnownTypes(version) {
 			plural, singular := kindToResource(version, kind)
-			meta := api.TypeMeta{APIVersion: version, Kind: kind}
+			fmt.Println("PLURAL ", plural, " singular ", singular)
+			meta := api2.TypeMeta{APIVersion: version, Kind: kind}
 			if _, ok := mapping[plural]; !ok {
 				mapping[plural] = meta
 				mapping[singular] = meta
@@ -104,7 +104,7 @@ func (d *DefaultRESTMapper) RESTMapping(version, kind string) (*meta.RESTMapping
 	// Default to a version with this kind
 	if len(version) == 0 {
 		for _, v := range Versions {
-			if _, ok := d.reverse[api.TypeMeta{APIVersion: v, Kind: kind}]; ok {
+			if _, ok := d.reverse[api2.TypeMeta{APIVersion: v, Kind: kind}]; ok {
 				version = v
 				break
 			}
@@ -115,11 +115,11 @@ func (d *DefaultRESTMapper) RESTMapping(version, kind string) (*meta.RESTMapping
 	}
 
 	// Ensure we have a resource mapping
-	resource, ok := d.reverse[api.TypeMeta{APIVersion: version, Kind: kind}]
+	resource, ok := d.reverse[api2.TypeMeta{APIVersion: version, Kind: kind}]
 	if !ok {
 		found := []string{}
 		for _, v := range Versions {
-			if _, ok := d.reverse[api.TypeMeta{APIVersion: v, Kind: kind}]; ok {
+			if _, ok := d.reverse[api2.TypeMeta{APIVersion: v, Kind: kind}]; ok {
 				found = append(found, v)
 			}
 		}

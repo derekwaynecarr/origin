@@ -19,4 +19,4 @@ limitations under the License.
 // The contract presented to clients is located in the versioned packages,
 // which are sub-directories. The first one is "v1beta1". Those packages
 // describe how a particular version is serialized to storage/network.
-package api
+package api2

@@ -29,19 +29,19 @@ type FakeEndpoints struct {
 	Namespace string
 }
 
-func (c *FakeEndpoints) Create(endpoints *api.Endpoints) (*api.Endpoints, error) {
+func (c *FakeEndpoints) Create(endpoints *api2.Endpoints) (*api2.Endpoints, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "create-endpoints"})
-	return &api.Endpoints{}, nil
+	return &api2.Endpoints{}, nil
 }
 
-func (c *FakeEndpoints) List(selector labels.Selector) (*api.EndpointsList, error) {
+func (c *FakeEndpoints) List(selector labels.Selector) (*api2.EndpointsList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-endpoints"})
-	return api.Scheme.CopyOrDie(&c.Fake.EndpointsList).(*api.EndpointsList), c.Fake.Err
+	return api2.Scheme.CopyOrDie(&c.Fake.EndpointsList).(*api2.EndpointsList), c.Fake.Err
 }
 
-func (c *FakeEndpoints) Get(name string) (*api.Endpoints, error) {
+func (c *FakeEndpoints) Get(name string) (*api2.Endpoints, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-endpoints"})
-	return &api.Endpoints{}, nil
+	return &api2.Endpoints{}, nil
 }
 
 func (c *FakeEndpoints) Watch(label, field labels.Selector, resourceVersion string) (watch.Interface, error) {
@@ -49,7 +49,7 @@ func (c *FakeEndpoints) Watch(label, field labels.Selector, resourceVersion stri
 	return c.Fake.Watch, c.Fake.Err
 }
 
-func (c *FakeEndpoints) Update(endpoints *api.Endpoints) (*api.Endpoints, error) {
+func (c *FakeEndpoints) Update(endpoints *api2.Endpoints) (*api2.Endpoints, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "update-endpoints", Value: endpoints.Name})
-	return &api.Endpoints{}, nil
+	return &api2.Endpoints{}, nil
 }

@@ -26,7 +26,7 @@ import (
 
 // statusError is an error intended for consumption by a REST API server.
 type statusError struct {
-	status api.Status
+	status api2.Status
 }
 
 // Error implements the Error interface.
@@ -34,16 +34,16 @@ func (e *statusError) Error() string {
 	return e.status.Message
 }
 
-// Status converts this error into an api.Status object.
-func (e *statusError) Status() api.Status {
+// Status converts this error into an api2.Status object.
+func (e *statusError) Status() api2.Status {
 	return e.status
 }
 
-// FromObject generates an statusError from an api.Status, if that is the type of obj; otherwise,
+// FromObject generates an statusError from an api2.Status, if that is the type of obj; otherwise,
 // returns an error created by fmt.Errorf.
 func FromObject(obj runtime.Object) error {
 	switch t := obj.(type) {
-	case *api.Status:
+	case *api2.Status:
 		return &statusError{*t}
 	}
 	return fmt.Errorf("unexpected object: %v", obj)
@@ -51,11 +51,11 @@ func FromObject(obj runtime.Object) error {
 
 // NewNotFound returns a new error which indicates that the resource of the kind and the name was not found.
 func NewNotFound(kind, name string) error {
-	return &statusError{api.Status{
-		Status: api.StatusFailure,
+	return &statusError{api2.Status{
+		Status: api2.StatusFailure,
 		Code:   http.StatusNotFound,
-		Reason: api.StatusReasonNotFound,
-		Details: &api.StatusDetails{
+		Reason: api2.StatusReasonNotFound,
+		Details: &api2.StatusDetails{
 			Kind: kind,
 			ID:   name,
 		},
@@ -65,11 +65,11 @@ func NewNotFound(kind, name string) error {
 
 // NewAlreadyExists returns an error indicating the item requested exists by that identifier.
 func NewAlreadyExists(kind, name string) error {
-	return &statusError{api.Status{
-		Status: api.StatusFailure,
+	return &statusError{api2.Status{
+		Status: api2.StatusFailure,
 		Code:   http.StatusConflict,
-		Reason: api.StatusReasonAlreadyExists,
-		Details: &api.StatusDetails{
+		Reason: api2.StatusReasonAlreadyExists,
+		Details: &api2.StatusDetails{
 			Kind: kind,
 			ID:   name,
 		},
@@ -79,11 +79,11 @@ func NewAlreadyExists(kind, name string) error {
 
 // NewConflict returns an error indicating the item can't be updated as provided.
 func NewConflict(kind, name string, err error) error {
-	return &statusError{api.Status{
-		Status: api.StatusFailure,
+	return &statusError{api2.Status{
+		Status: api2.StatusFailure,
 		Code:   http.StatusConflict,
-		Reason: api.StatusReasonConflict,
-		Details: &api.StatusDetails{
+		Reason: api2.StatusReasonConflict,
+		Details: &api2.StatusDetails{
 			Kind: kind,
 			ID:   name,
 		},
@@ -93,21 +93,21 @@ func NewConflict(kind, name string, err error) error {
 
 // NewInvalid returns an error indicating the item is invalid and cannot be processed.
 func NewInvalid(kind, name string, errs ValidationErrorList) error {
-	causes := make([]api.StatusCause, 0, len(errs))
+	causes := make([]api2.StatusCause, 0, len(errs))
 	for i := range errs {
 		if err, ok := errs[i].(ValidationError); ok {
-			causes = append(causes, api.StatusCause{
-				Type:    api.CauseType(err.Type),
+			causes = append(causes, api2.StatusCause{
+				Type:    api2.CauseType(err.Type),
 				Message: err.Error(),
 				Field:   err.Field,
 			})
 		}
 	}
-	return &statusError{api.Status{
-		Status: api.StatusFailure,
+	return &statusError{api2.Status{
+		Status: api2.StatusFailure,
 		Code:   422, // RFC 4918
-		Reason: api.StatusReasonInvalid,
-		Details: &api.StatusDetails{
+		Reason: api2.StatusReasonInvalid,
+		Details: &api2.StatusDetails{
 			Kind:   kind,
 			ID:     name,
 			Causes: causes,
@@ -118,28 +118,28 @@ func NewInvalid(kind, name string, errs ValidationErrorList) error {
 
 // IsNotFound returns true if the specified error was created by NewNotFoundErr.
 func IsNotFound(err error) bool {
-	return reasonForError(err) == api.StatusReasonNotFound
+	return reasonForError(err) == api2.StatusReasonNotFound
 }
 
 // IsAlreadyExists determines if the err is an error which indicates that a specified resource already exists.
 func IsAlreadyExists(err error) bool {
-	return reasonForError(err) == api.StatusReasonAlreadyExists
+	return reasonForError(err) == api2.StatusReasonAlreadyExists
 }
 
 // IsConflict determines if the err is an error which indicates the provided update conflicts.
 func IsConflict(err error) bool {
-	return reasonForError(err) == api.StatusReasonConflict
+	return reasonForError(err) == api2.StatusReasonConflict
 }
 
 // IsInvalid determines if the err is an error which indicates the provided resource is not valid.
 func IsInvalid(err error) bool {
-	return reasonForError(err) == api.StatusReasonInvalid
+	return reasonForError(err) == api2.StatusReasonInvalid
 }
 
-func reasonForError(err error) api.StatusReason {
+func reasonForError(err error) api2.StatusReason {
 	switch t := err.(type) {
 	case *statusError:
 		return t.status.Reason
 	}
-	return api.StatusReasonUnknown
+	return api2.StatusReasonUnknown
 }

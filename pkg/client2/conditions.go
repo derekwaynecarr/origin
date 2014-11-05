@@ -24,7 +24,7 @@ import (
 
 // ControllerHasDesiredReplicas returns a condition that will be true iff the desired replica count
 // for a controller's ReplicaSelector equals the Replicas count.
-func (c *Client) ControllerHasDesiredReplicas(controller api.ReplicationController) wait.ConditionFunc {
+func (c *Client) ControllerHasDesiredReplicas(controller api2.ReplicationController) wait.ConditionFunc {
 	return func() (bool, error) {
 		pods, err := c.Pods(controller.Namespace).List(labels.Set(controller.DesiredState.ReplicaSelector).AsSelector())
 		if err != nil {

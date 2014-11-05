@@ -29,24 +29,24 @@ type FakeServices struct {
 	Namespace string
 }
 
-func (c *FakeServices) List(selector labels.Selector) (*api.ServiceList, error) {
+func (c *FakeServices) List(selector labels.Selector) (*api2.ServiceList, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "list-services"})
 	return &c.Fake.ServiceList, c.Fake.Err
 }
 
-func (c *FakeServices) Get(name string) (*api.Service, error) {
+func (c *FakeServices) Get(name string) (*api2.Service, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "get-service", Value: name})
-	return &api.Service{ObjectMeta: api.ObjectMeta{Name: name, Namespace: c.Namespace}}, nil
+	return &api2.Service{ObjectMeta: api2.ObjectMeta{Name: name, Namespace: c.Namespace}}, nil
 }
 
-func (c *FakeServices) Create(service *api.Service) (*api.Service, error) {
+func (c *FakeServices) Create(service *api2.Service) (*api2.Service, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "create-service", Value: service})
-	return &api.Service{}, nil
+	return &api2.Service{}, nil
 }
 
-func (c *FakeServices) Update(service *api.Service) (*api.Service, error) {
+func (c *FakeServices) Update(service *api2.Service) (*api2.Service, error) {
 	c.Fake.Actions = append(c.Fake.Actions, FakeAction{Action: "update-service", Value: service})
-	return &api.Service{}, nil
+	return &api2.Service{}, nil
 }
 
 func (c *FakeServices) Delete(service string) error {

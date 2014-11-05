@@ -47,8 +47,8 @@ type KubeletHealthChecker interface {
 // Injectable for easy testing.
 type PodInfoGetter interface {
 	// GetPodInfo returns information about all containers which are part
-	// Returns an api.PodInfo, or an error if one occurs.
-	GetPodInfo(host, podNamespace, podID string) (api.PodInfo, error)
+	// Returns an api2.PodInfo, or an error if one occurs.
+	GetPodInfo(host, podNamespace, podID string) (api2.PodInfo, error)
 }
 
 // HTTPKubeletClient is the default implementation of PodInfoGetter and KubeletHealthchecker, accesses the kubelet over HTTP.
@@ -89,7 +89,7 @@ func (c *HTTPKubeletClient) url(host string) string {
 }
 
 // GetPodInfo gets information about the specified pod.
-func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api.PodInfo, error) {
+func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api2.PodInfo, error) {
 	request, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
@@ -114,7 +114,7 @@ func (c *HTTPKubeletClient) GetPodInfo(host, podNamespace, podID string) (api.Po
 		return nil, err
 	}
 	// Check that this data can be unmarshalled
-	info := api.PodInfo{}
+	info := api2.PodInfo{}
 	err = json.Unmarshal(body, &info)
 	if err != nil {
 		return nil, err
@@ -128,11 +128,11 @@ func (c *HTTPKubeletClient) HealthCheck(host string) (health.Status, error) {
 
 // FakeKubeletClient is a fake implementation of PodInfoGetter. It is useful for testing.
 type FakePodInfoGetter struct {
-	data api.PodInfo
+	data api2.PodInfo
 	err  error
 }
 
 // GetPodInfo is a fake implementation of PodInfoGetter.GetPodInfo.
-func (c *FakePodInfoGetter) GetPodInfo(host, podNamespace string, podID string) (api.PodInfo, error) {
+func (c *FakePodInfoGetter) GetPodInfo(host, podNamespace string, podID string) (api2.PodInfo, error) {
 	return c.data, c.err
 }
