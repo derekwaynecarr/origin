@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	errs "github.com/openshift/origin/pkg/api2/errors"
 	"github.com/openshift/origin/pkg/capabilities"
 	"github.com/openshift/origin/pkg/labels"

@@ -26,7 +26,7 @@ import (
 
 	"github.com/openshift/origin/Godeps/_workspace/src/github.com/fsouza/go-dockerclient"
 	"github.com/openshift/origin/Godeps/_workspace/src/github.com/google/gofuzz"
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/api2/latest"
 	"github.com/openshift/origin/pkg/api2/meta"
 	"github.com/openshift/origin/pkg/api2/v1beta1"

@@ -17,7 +17,7 @@ limitations under the License.
 package v1beta3
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/runtime"
 )
 

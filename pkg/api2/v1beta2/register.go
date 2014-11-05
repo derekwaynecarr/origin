@@ -17,15 +17,15 @@ limitations under the License.
 package v1beta2
 
 import (
-	"github.com/openshift/origin/pkg/api2"
+	api "github.com/openshift/origin/pkg/api2"
 	"github.com/openshift/origin/pkg/runtime"
 )
 
 // Codec encodes internal objects to the v1beta2 scheme
-var Codec = runtime.CodecFor(api2.Scheme, "v1beta2")
+var Codec = runtime.CodecFor(api.Scheme, "v1beta2")
 
 func init() {
-	api2.Scheme.AddKnownTypes("v1beta2",
+	api.Scheme.AddKnownTypes("v1beta2",
 		&Pod{},
 		&PodList{},
 		&ReplicationController{},
