@@ -51,7 +51,6 @@ func NewDefaultRESTMapper() meta.RESTMapper {
 	for _, version := range Versions {
 		for kind := range api2.Scheme.KnownTypes(version) {
 			plural, singular := kindToResource(version, kind)
-			fmt.Println("PLURAL ", plural, " singular ", singular)
 			meta := api2.TypeMeta{APIVersion: version, Kind: kind}
 			if _, ok := mapping[plural]; !ok {
 				mapping[plural] = meta
