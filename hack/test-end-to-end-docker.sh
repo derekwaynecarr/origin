@@ -76,9 +76,24 @@ os::log::info "oc version:        `oc version`"
 os::log::info "Using images:							${USE_IMAGES}"
 
 os::log::info "Starting OpenShift containerized server"
-oc cluster up --server-loglevel=4 --version="${TAG}" \
-        --host-data-dir="${VOLUME_DIR}/etcd" \
-        --host-volumes-dir="${VOLUME_DIR}"
+
+# configure a bind mount proxy (requires openshift compiled)
+IP=$(openshift start --print-ip)
+docker run --privileged --net=host -v /var/run/docker.sock:/var/run/docker.sock -d --name=bindmountproxy cewong/bindmountproxy proxy ${IP}:2375 $(which openshift)
+sleep 2
+docker_host=tcp://${IP}:2375
+
+# start openshift
+DOCKER_HOST=${docker_host} oc cluster up \
+--server-loglevel=4 \
+--host-data-dir="${VOLUME_DIR}/etcd" \
+--host-volumes-dir="${VOLUME_DIR}" \
+-e DOCKER_HOST=${docker_host}
+
+
+#oc cluster up --server-loglevel=4 --version="${TAG}" \
+#        --host-data-dir="${VOLUME_DIR}/etcd" \
+#        --host-volumes-dir="${VOLUME_DIR}"
 
 oc cluster status
 
